@@ -1,0 +1,69 @@
+---
+title: "Ivan Estrada - Unit 1"
+output: html_document
+---
+
+Load relevant packages
+```{r}
+library(tidyverse)
+library(table1)
+library(lessR)
+```
+
+```{r}
+getwd()
+setwd("C:/Users/15417/Desktop/H587/Unit1")
+```   
+
+Read in data
+```{r}
+data <- readxl::read_xlsx("BurnData.xlsx")
+```
+
+Explore data-set
+```{r}
+str(data)
+data_clean <- data %>%
+  mutate(status = recode_factor(status, 
+                                '0' = 'Not Infected',
+                                '1' = 'Infected',)) %>%
+  mutate(newtrt = recode_factor(newtrt,
+                                '0' = 'Standard Treatment',
+                                '1' = 'New Treatment')) %>%
+  mutate(female = recode_factor(female,
+                                '0' = 'Male',
+                                '1' = 'Female')) %>%
+  mutate(white = recode_factor(white,
+                               '0' = 'Non-White Patients',
+                               '1' = 'White Patients')) %>%
+  mutate(burntype = recode_factor(burntype,
+                                '1' = 'Checmical Burn',
+                                '2' = 'Scald',
+                                '3' = 'Electric',
+                                '4' = 'Flame'))
+label(data_clean$time) <- "Time to infection or release from burn ward"
+label(data_clean$status) <- "Infection status"
+label(data_clean$newtrt) <- "Treatment Status"
+label(data_clean$female) <- "Sex"
+label(data_clean$white) <- "Race"
+label(data_clean$saburned) <- "Percentage of total body surface area burned"
+label(data_clean$burntype) <- "Burn type"
+```
+Table 1 
+```{r}
+table1(~ newtrt + status + time + female + white + saburned + burntype |newtrt , data = data_clean, overall = "Total", topclass = "Rtable1-times Rtable1-zebra Rtable1-shade")
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
